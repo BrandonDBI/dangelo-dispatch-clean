@@ -10,6 +10,8 @@ button { cursor:pointer; }
 .badge { padding:5px 10px; border-radius:999px; font-size:12px; font-weight:700; text-transform:capitalize; }
 .badge.supervisor { background:#d1fadf; color:#05603a; }
 .badge.viewer { background:#e4e7ec; color:#344054; }
+.liveBadge { display:inline-flex; align-items:center; gap:6px; padding:5px 10px; border-radius:999px; background:#e7f8ee; color:#067647; font-size:12px; font-weight:700; }
+.liveDot { width:8px; height:8px; border-radius:50%; background:#12b76a; box-shadow:0 0 0 3px rgba(18,183,106,.18); }
 .toolbar { display:flex; justify-content:space-between; align-items:center; padding:14px 18px; background:white; border-bottom:1px solid var(--line); }
 .primary,.secondary,.danger,.icon { min-height:38px; border-radius:7px; border:1px solid transparent; padding:8px 13px; }
 .primary { background:var(--brand); color:white; font-weight:700; }
