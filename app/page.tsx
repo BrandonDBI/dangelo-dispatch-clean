@@ -137,6 +137,22 @@ export default function Home() {
     }
   }
 
+  function duplicateJob() {
+    if (!draft?.id) return;
+
+    setDraft({
+      job_name: `${draft.job_name} Copy`,
+      customer: draft.customer,
+      location: draft.location,
+      notes: draft.notes,
+      start_date: draft.start_date,
+      end_date: draft.end_date,
+      color: draft.color,
+      crewIds: [...draft.crewIds]
+    });
+    setMessage("");
+  }
+
   async function deleteJob(id: number) {
     if (!confirm("Delete this job?")) return;
     try {
@@ -331,6 +347,7 @@ export default function Home() {
 
             <div className="modalActions">
               {draft.id && <button className="danger" onClick={() => deleteJob(draft.id!)}>Delete</button>}
+              {draft.id && <button className="secondary" onClick={duplicateJob}>Duplicate</button>}
               <span />
               <button className="secondary" onClick={() => setDraft(null)}>Cancel</button>
               <button className="primary" onClick={saveJob}>Save job</button>
