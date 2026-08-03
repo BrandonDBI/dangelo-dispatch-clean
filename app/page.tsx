@@ -59,6 +59,7 @@ export default function Home() {
   const [jobs, setJobs] = useState<Job[]>([]);
   const [draft, setDraft] = useState<Draft | null>(null);
   const [message, setMessage] = useState("");
+  const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
 
   const days = useMemo(() => Array.from({ length: 7 }, (_, i) => addDays(weekStart, i)), [weekStart]);
   const canEdit = user?.role === "supervisor";
@@ -72,9 +73,12 @@ export default function Home() {
   useEffect(() => {
     if (!user) return;
     load();
-    const timer = setInterval(load, 5000);
+
+    if (draft) return;
+
+    const timer = setInterval(load, 3000);
     return () => clearInterval(timer);
-  }, [user, weekStart]);
+  }, [user, weekStart, draft]);
 
   async function load() {
     try {
@@ -83,6 +87,7 @@ export default function Home() {
       const data = await api(`/api/schedule?from=${from}&to=${to}`);
       setCrew(data.crew);
       setJobs(data.jobs);
+      setLastUpdated(new Date());
       setMessage("");
     } catch (error) {
       setMessage(error instanceof Error ? error.message : "Could not load schedule.");
@@ -177,8 +182,11 @@ export default function Home() {
       <header className="topbar">
         <div><h1>D’Angelo Schedule</h1><p>Dispatch and crew board</p></div>
         <div className="actions">
+          <span className="liveBadge">
+            <span className="liveDot" />
+            Live{lastUpdated ? ` · ${format(lastUpdated, "h:mm:ss a")}` : ""}
+          </span>
           <span className={`badge ${user.role}`}>{user.role}</span>
-          <button className="secondary" onClick={load}>Refresh</button>
           <button className="secondary" onClick={logout}>Sign out</button>
         </div>
       </header>
@@ -314,6 +322,7 @@ function Login({ onLogin }: { onLogin: (user: User) => void }) {
   const [email, setEmail] = useState("brandon@dangelo-brothers.com");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
+  const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
