@@ -228,18 +228,42 @@ export default function Home() {
                     onDragStart={e => e.dataTransfer.setData("job-id", String(job.id))}
                     onClick={() => canEdit && editJob(job)}
                   >
-                    <h3>{job.job_name}</h3>
-                    {job.customer && <p className="customer">{job.customer}</p>}
-                    {job.location && <p>{job.location}</p>}
+                    <div className="jobHeader">
+                      <h3>{job.job_name}</h3>
+                      {job.customer && <p className="customer">{job.customer}</p>}
+                    </div>
+
+                    {job.location && (
+                      <a
+                        className="mapLink"
+                        href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(job.location)}`}
+                        target="_blank"
+                        rel="noreferrer"
+                        onClick={e => e.stopPropagation()}
+                      >
+                        <span className="cardLabel">Address</span>
+                        <span>{job.location}</span>
+                      </a>
+                    )}
+
                     {!!job.assignments?.length && (
-                      <div className="pills">
-                        {job.assignments.map(a => {
-                          const member = crew.find(c => c.id === a.crew_id);
-                          return member ? <span key={a.crew_id}>{member.name}</span> : null;
-                        })}
+                      <div className="cardSection">
+                        <span className="cardLabel">Crew / Equipment</span>
+                        <div className="pills">
+                          {job.assignments.map(a => {
+                            const member = crew.find(c => c.id === a.crew_id);
+                            return member ? <span key={a.crew_id}>{member.name}</span> : null;
+                          })}
+                        </div>
                       </div>
                     )}
-                    {job.notes && <p className="notes">{job.notes}</p>}
+
+                    {job.notes && (
+                      <div className="cardSection notesSection">
+                        <span className="cardLabel">Notes</span>
+                        <p className="notes">{job.notes}</p>
+                      </div>
+                    )}
                   </article>
                 ))}
                 {canEdit && <button className="addDay" onClick={() => setDraft(blankDraft(key))}>+ Add job</button>}
